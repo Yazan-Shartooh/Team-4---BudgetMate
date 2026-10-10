@@ -13,8 +13,21 @@ import AboutPage from './pages/AboutPage';
 import NotFoundPage from './pages/NotFoundPage';
 import { getPageTitle } from './navigation';
 import { pageRoutes } from './types';
+import { useStore } from 'react-redux';
+import type { AppStore } from './store/store';
+import { fetchTransactions } from './store/transactionsSlice';
+import { fetchBudgets } from './store/budgetsSlice';
+import MonthFilter from './components/MonthFilter';
+
+const useAppStore = useStore.withTypes<AppStore>();
 
 export default function App() {
+  const store = useAppStore();
+  useEffect(() => {
+    // Read current state to guard StrictMode replay and app remounts.
+    if (store.getState().transactions.fetch.status === 'idle') void store.dispatch(fetchTransactions());
+    if (store.getState().budgets.fetch.status === 'idle') void store.dispatch(fetchBudgets());
+  }, [store]);
   const [mobileOpen, setMobileOpen] = useState(false);
   const menuButtonRef = useRef<HTMLButtonElement>(null);
   const mainRef = useRef<HTMLElement>(null);
@@ -65,7 +78,7 @@ export default function App() {
           <Routes>
             <Route path={pageRoutes.dashboard} element={<DashboardPage />} />
             <Route path={pageRoutes.income} element={<IncomePage />} />
-            <Route path={pageRoutes.transactions} element={<TransactionsPage />} />
+            <Route path={pageRoutes.transactions} element={<TransactionsPage MonthFilterComponent={MonthFilter} />} />
             <Route path={pageRoutes.addTransaction} element={<AddTransactionPage />} />
             <Route path={pageRoutes.budgets} element={<BudgetsPage />} />
             <Route path={pageRoutes.report} element={<MonthlyReportPage />} />

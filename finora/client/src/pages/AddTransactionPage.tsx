@@ -1,21 +1,30 @@
-import { Plus } from 'lucide-react';
-import { Link, useSearchParams } from 'react-router-dom';
+import { useEffect } from 'react';
+import { useNavigate, useSearchParams } from 'react-router-dom';
+import TransactionForm from '../components/TransactionForm';
+import { useNotifications } from '../context/NotificationContext';
+import { useAppDispatch, useAppSelector } from '../store/hooks';
+import { clearTransactionMutationState, createTransaction } from '../store/transactionsSlice';
 import { pageRoutes } from '../types';
 
 export default function AddTransactionPage() {
   const [params] = useSearchParams();
   const isIncome = params.get('type') === 'income';
+  const dispatch = useAppDispatch();
+  const navigate = useNavigate();
+  const { notify } = useNotifications();
+  const data = useAppSelector((state) => state.transactions);
+  useEffect(() => { dispatch(clearTransactionMutationState()); }, [dispatch]);
   return <div className="page-stack">
-    <div className="page-heading">
-      <div><p className="eyebrow">Your money, clearly</p><h1>{isIncome ? 'Add income' : 'Add transaction'}</h1>
-        <p>A small entry. A clearer picture.</p></div>
-      <span className="badge">In development</span>
-    </div>
-    <section className="card placeholder-intro">
-      <div className="placeholder-symbol"><Plus size={32} aria-hidden="true" /></div>
-      <h2>Your transaction form will live here.</h2>
-      <p>The shared form will record {isIncome ? 'income' : 'income or expenses'}, including an amount, category, date, and optional note. Saving is not available yet.</p>
-      <Link className="button button--secondary" to={pageRoutes.transactions}>Back to transactions</Link>
+    <div className="page-heading"><div><p className="eyebrow">Your money, clearly</p>
+      <h1>{isIncome ? 'Add income' : 'Add transaction'}</h1><p>A small entry. A clearer picture.</p></div></div>
+    <section className="card transactions-entry" aria-label="New transaction">
+      <TransactionForm key={isIncome ? 'income' : 'expense'} initialType={isIncome ? 'income' : 'expense'}
+        pending={data.fetch.status === 'pending' || data.mutation.status === 'pending'} error={data.mutation.error}
+        onCancel={() => navigate(pageRoutes.transactions)} onSubmit={async (input) => {
+          await dispatch(createTransaction(input)).unwrap();
+          notify({ kind: 'success', message: 'Transaction added.' });
+          navigate(pageRoutes.transactions);
+        }} />
     </section>
   </div>;
 }

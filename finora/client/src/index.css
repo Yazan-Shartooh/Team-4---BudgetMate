@@ -350,3 +350,19 @@ dialog.modal { width: min(var(--dialog-width), calc(100% - var(--dialog-gutter) 
   :root { --transition-duration: 0ms; }
   *, *::before, *::after { animation: none !important; scroll-behavior: auto !important; transition: none !important; }
 }
+
+/* Integrated feature requirements; all values reuse the shared theme. */
+.transactions-entry { padding: var(--card-padding); }
+.budgets-table tbody th { background: var(--color-surface); color: var(--color-text); }
+.budgets-table tbody tr:last-child th { border-bottom: 0; }
+.budgets-usage .progress { --budget-progress-color: var(--color-teal); accent-color: var(--budget-progress-color); }
+.budgets-usage .progress[data-status="near-limit"] { --budget-progress-color: var(--color-progress-near); }
+.budgets-usage .progress[data-status="exceeded"] { --budget-progress-color: var(--color-progress-exceeded); }
+.budgets-usage .progress::-webkit-progress-value { background: var(--budget-progress-color); }
+.budgets-usage .progress::-moz-progress-bar { background: var(--budget-progress-color); }
+.report-summary .amount { font-size: var(--font-size-stat); font-variant-numeric: tabular-nums; overflow-wrap: anywhere; }
+/* Gaps in the notification stack must not intercept page controls. */
+.toast-queue { pointer-events: none; }
+.toast { pointer-events: auto; }
+.toast p { overflow-wrap: anywhere; min-width: 0; }
+.app-content, .page-stack, .field, .month-filter { min-width: 0; }
