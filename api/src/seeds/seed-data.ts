@@ -1,4 +1,4 @@
-import type { SeedBudget, SeedTransaction, TransactionType } from '../types';
+import type { SeedBudget, SeedTransaction } from '../types';
 
 export type { SeedBudget, SeedTransaction } from '../types';
 
@@ -38,6 +38,7 @@ export function dateIn(offset: number, day: number): string {
 export const SEED_TRANSACTIONS: SeedTransaction[] = [
   // Current month: income = 1,500.00; expenses = 858.50; savings = 641.50.
   {
+    id: 1,
     type: 'income',
     amount: 1200,
     category: 'Salary',
@@ -45,6 +46,7 @@ export const SEED_TRANSACTIONS: SeedTransaction[] = [
     note: 'Monthly salary',
   },
   {
+    id: 2,
     type: 'income',
     amount: 300,
     category: 'Freelance',
@@ -52,6 +54,7 @@ export const SEED_TRANSACTIONS: SeedTransaction[] = [
     note: 'Freelance project',
   },
   {
+    id: 3,
     type: 'expense',
     amount: 400,
     category: 'Housing',
@@ -59,6 +62,7 @@ export const SEED_TRANSACTIONS: SeedTransaction[] = [
     note: 'Rent',
   },
   {
+    id: 4,
     type: 'expense',
     amount: 70,
     category: 'Bills',
@@ -66,6 +70,7 @@ export const SEED_TRANSACTIONS: SeedTransaction[] = [
     note: 'Electricity and internet',
   },
   {
+    id: 5,
     type: 'expense',
     amount: 85.5,
     category: 'Food',
@@ -73,6 +78,7 @@ export const SEED_TRANSACTIONS: SeedTransaction[] = [
     note: 'Weekly groceries',
   },
   {
+    id: 6,
     type: 'expense',
     amount: 45,
     category: 'Transport',
@@ -80,6 +86,7 @@ export const SEED_TRANSACTIONS: SeedTransaction[] = [
     note: 'Monthly bus pass',
   },
   {
+    id: 7,
     type: 'expense',
     amount: 45,
     category: 'Entertainment',
@@ -87,6 +94,7 @@ export const SEED_TRANSACTIONS: SeedTransaction[] = [
     note: 'Cinema ticket',
   },
   {
+    id: 8,
     type: 'expense',
     amount: 62.3,
     category: 'Food',
@@ -94,6 +102,7 @@ export const SEED_TRANSACTIONS: SeedTransaction[] = [
     note: 'Supermarket',
   },
   {
+    id: 9,
     type: 'expense',
     amount: 25,
     category: 'Health',
@@ -101,6 +110,7 @@ export const SEED_TRANSACTIONS: SeedTransaction[] = [
     note: 'Pharmacy',
   },
   {
+    id: 10,
     type: 'expense',
     amount: 38,
     category: 'Transport',
@@ -108,6 +118,7 @@ export const SEED_TRANSACTIONS: SeedTransaction[] = [
     note: 'Taxi',
   },
   {
+    id: 11,
     type: 'expense',
     amount: 37.7,
     category: 'Food',
@@ -115,6 +126,7 @@ export const SEED_TRANSACTIONS: SeedTransaction[] = [
     note: 'Lunch with friends',
   },
   {
+    id: 12,
     type: 'expense',
     amount: 50,
     category: 'Entertainment',
@@ -124,6 +136,7 @@ export const SEED_TRANSACTIONS: SeedTransaction[] = [
 
   // Previous month.
   {
+    id: 13,
     type: 'income',
     amount: 1200,
     category: 'Salary',
@@ -131,6 +144,7 @@ export const SEED_TRANSACTIONS: SeedTransaction[] = [
     note: 'Monthly salary',
   },
   {
+    id: 14,
     type: 'income',
     amount: 250,
     category: 'Freelance',
@@ -138,6 +152,7 @@ export const SEED_TRANSACTIONS: SeedTransaction[] = [
     note: 'Freelance project',
   },
   {
+    id: 15,
     type: 'income',
     amount: 50,
     category: 'Other Income',
@@ -145,6 +160,7 @@ export const SEED_TRANSACTIONS: SeedTransaction[] = [
     note: 'Extra side cash',
   },
   {
+    id: 16,
     type: 'expense',
     amount: 400,
     category: 'Housing',
@@ -152,6 +168,7 @@ export const SEED_TRANSACTIONS: SeedTransaction[] = [
     note: 'Rent',
   },
   {
+    id: 17,
     type: 'expense',
     amount: 85,
     category: 'Bills',
@@ -159,6 +176,7 @@ export const SEED_TRANSACTIONS: SeedTransaction[] = [
     note: 'Electricity and internet',
   },
   {
+    id: 18,
     type: 'expense',
     amount: 90,
     category: 'Food',
@@ -166,6 +184,7 @@ export const SEED_TRANSACTIONS: SeedTransaction[] = [
     note: 'Groceries',
   },
   {
+    id: 19,
     type: 'expense',
     amount: 40,
     category: 'Transport',
@@ -173,6 +192,7 @@ export const SEED_TRANSACTIONS: SeedTransaction[] = [
     note: 'Fuel',
   },
   {
+    id: 20,
     type: 'expense',
     amount: 30,
     category: 'Entertainment',
@@ -180,6 +200,7 @@ export const SEED_TRANSACTIONS: SeedTransaction[] = [
     note: 'Streaming and games',
   },
   {
+    id: 21,
     type: 'expense',
     amount: 60,
     category: 'Health',
@@ -187,6 +208,7 @@ export const SEED_TRANSACTIONS: SeedTransaction[] = [
     note: 'Dentist',
   },
   {
+    id: 22,
     type: 'expense',
     amount: 75,
     category: 'Food',
@@ -194,6 +216,7 @@ export const SEED_TRANSACTIONS: SeedTransaction[] = [
     note: 'Groceries',
   },
   {
+    id: 23,
     type: 'expense',
     amount: 55,
     category: 'Transport',
@@ -201,6 +224,7 @@ export const SEED_TRANSACTIONS: SeedTransaction[] = [
     note: 'Train tickets',
   },
   {
+    id: 24,
     type: 'expense',
     amount: 110.4,
     category: 'Food',
@@ -208,6 +232,7 @@ export const SEED_TRANSACTIONS: SeedTransaction[] = [
     note: 'Family dinner',
   },
   {
+    id: 25,
     type: 'expense',
     amount: 22.5,
     category: 'Entertainment',
@@ -217,6 +242,7 @@ export const SEED_TRANSACTIONS: SeedTransaction[] = [
 
   // Two months ago: income = 1,000.00; expenses = 1,140.00; savings = -140.00.
   {
+    id: 26,
     type: 'income',
     amount: 1000,
     category: 'Salary',
@@ -224,6 +250,7 @@ export const SEED_TRANSACTIONS: SeedTransaction[] = [
     note: 'Monthly salary',
   },
   {
+    id: 27,
     type: 'expense',
     amount: 400,
     category: 'Housing',
@@ -231,6 +258,7 @@ export const SEED_TRANSACTIONS: SeedTransaction[] = [
     note: 'Rent',
   },
   {
+    id: 28,
     type: 'expense',
     amount: 90,
     category: 'Bills',
@@ -238,6 +266,7 @@ export const SEED_TRANSACTIONS: SeedTransaction[] = [
     note: 'Electricity and internet',
   },
   {
+    id: 29,
     type: 'expense',
     amount: 180,
     category: 'Food',
@@ -245,6 +274,7 @@ export const SEED_TRANSACTIONS: SeedTransaction[] = [
     note: 'Groceries',
   },
   {
+    id: 30,
     type: 'expense',
     amount: 180,
     category: 'Health',
@@ -252,6 +282,7 @@ export const SEED_TRANSACTIONS: SeedTransaction[] = [
     note: 'Medical check-up',
   },
   {
+    id: 31,
     type: 'expense',
     amount: 170,
     category: 'Food',
@@ -259,6 +290,7 @@ export const SEED_TRANSACTIONS: SeedTransaction[] = [
     note: 'Groceries and restaurant',
   },
   {
+    id: 32,
     type: 'expense',
     amount: 120,
     category: 'Entertainment',
@@ -269,10 +301,10 @@ export const SEED_TRANSACTIONS: SeedTransaction[] = [
 
 // Starter budgets for the current month and the previous month.
 export const SEED_BUDGETS: SeedBudget[] = [
-  { category: 'Food', month: monthKey(0), amount: 300 },
-  { category: 'Transport', month: monthKey(0), amount: 100 },
-  { category: 'Entertainment', month: monthKey(0), amount: 80 },
-  { category: 'Food', month: monthKey(1), amount: 300 },
-  { category: 'Transport', month: monthKey(1), amount: 100 },
-  { category: 'Entertainment', month: monthKey(1), amount: 80 },
+  { id: 1, category: 'Food', month: monthKey(0), amount: 300 },
+  { id: 2, category: 'Transport', month: monthKey(0), amount: 100 },
+  { id: 3, category: 'Entertainment', month: monthKey(0), amount: 80 },
+  { id: 4, category: 'Food', month: monthKey(1), amount: 300 },
+  { id: 5, category: 'Transport', month: monthKey(1), amount: 100 },
+  { id: 6, category: 'Entertainment', month: monthKey(1), amount: 80 },
 ];

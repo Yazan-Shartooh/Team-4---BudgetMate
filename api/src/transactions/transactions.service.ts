@@ -4,7 +4,6 @@ import {
   NotFoundException,
   OnModuleInit,
 } from '@nestjs/common';
-import { randomUUID } from 'node:crypto';
 import { CategoriesService } from '../categories/categories.service';
 import {
   fromCents,
@@ -31,6 +30,7 @@ type TransactionCandidate = {
 @Injectable()
 export class TransactionsService implements OnModuleInit {
   private transactions: Transaction[] = [];
+  private nextTransactionId = 1;
 
   constructor(private readonly categoriesService: CategoriesService) {}
 
@@ -41,6 +41,11 @@ export class TransactionsService implements OnModuleInit {
       this.assertValid(seed);
       this.transactions.push(this.toStoredTransaction(seed));
     }
+    this.nextTransactionId =
+      this.transactions.reduce(
+        (maxId, transaction) => Math.max(maxId, transaction.id),
+        0,
+      ) + 1;
   }
 
   create(dto: CreateTransactionDto): Transaction {
@@ -78,13 +83,15 @@ export class TransactionsService implements OnModuleInit {
   }
 
   findOne(id: string): Transaction {
-    const transaction = this.transactions.find((item) => item.id === id);
+    const numericId = Number(id);
+    const transaction = this.transactions.find((item) => item.id === numericId);
     if (!transaction) throw new NotFoundException('Transaction not found.');
     return { ...transaction };
   }
 
   update(id: string, dto: UpdateTransactionDto): Transaction {
-    const index = this.transactions.findIndex((item) => item.id === id);
+    const numericId = Number(id);
+    const index = this.transactions.findIndex((item) => item.id === numericId);
     if (index === -1) throw new NotFoundException('Transaction not found.');
     if (Object.keys(dto).length === 0) {
       throw new BadRequestException('Provide at least one field to update.');
@@ -121,7 +128,8 @@ export class TransactionsService implements OnModuleInit {
   }
 
   remove(id: string): void {
-    const index = this.transactions.findIndex((item) => item.id === id);
+    const numericId = Number(id);
+    const index = this.transactions.findIndex((item) => item.id === numericId);
     if (index === -1) throw new NotFoundException('Transaction not found.');
     this.transactions.splice(index, 1);
   }
@@ -224,8 +232,10 @@ export class TransactionsService implements OnModuleInit {
   private toStoredTransaction(
     candidate: TransactionCandidate | SeedTransaction,
   ): Transaction {
+    const id = 'id' in candidate ? candidate.id : this.nextTransactionId++;
+
     return {
-      id: randomUUID(),
+      id,
       type: candidate.type,
       amount: fromCents(toCents(candidate.amount)),
       category: candidate.category,

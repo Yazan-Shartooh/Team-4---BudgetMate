@@ -1,7 +1,7 @@
 export type TransactionType = 'income' | 'expense';
 
 export interface Transaction {
-  id: string;
+  id: number;
   type: TransactionType;
   amount: number;
   category: string;
@@ -19,7 +19,7 @@ export interface TransactionFilter {
 export type BudgetStatus = 'on_track' | 'near_limit' | 'exceeded' | 'no_budget';
 
 export interface Budget {
-  id: string;
+  id: number;
   category: string;
   month: string; // YYYY-MM
   amount: number;
@@ -28,7 +28,7 @@ export interface Budget {
 export interface BudgetUsage {
   category: string;
   month: string;
-  budgetId: string | null;
+  budgetId: number | null;
   budget: number | null;
   spent: number;
   remaining: number | null;
@@ -38,6 +38,7 @@ export interface BudgetUsage {
 }
 
 export interface SeedTransaction {
+  id: number;
   type: TransactionType;
   amount: number;
   category: string;
@@ -46,6 +47,7 @@ export interface SeedTransaction {
 }
 
 export interface SeedBudget {
+  id: number;
   category: string;
   month: string;
   amount: number;

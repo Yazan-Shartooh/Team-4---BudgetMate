@@ -5,7 +5,6 @@ import {
   NotFoundException,
   OnModuleInit,
 } from '@nestjs/common';
-import { randomUUID } from 'node:crypto';
 import { CategoriesService } from '../categories/categories.service';
 import { fromCents, isValidMonth, round1, toCents } from '../common/utils';
 import { SEED_BUDGETS, type SeedBudget } from '../seeds/seed-data';
@@ -17,6 +16,7 @@ import { UpdateBudgetDto } from './dto/update-budget.dto';
 @Injectable()
 export class BudgetsService implements OnModuleInit {
   private budgets: Budget[] = [];
+  private nextBudgetId = 1;
 
   constructor(
     private readonly categoriesService: CategoriesService,
@@ -28,12 +28,14 @@ export class BudgetsService implements OnModuleInit {
     for (const seed of SEED_BUDGETS) {
       this.assertValidBudget(seed);
       this.budgets.push({
-        id: randomUUID(),
+        id: seed.id,
         category: seed.category,
         month: seed.month,
         amount: fromCents(toCents(seed.amount)),
       });
     }
+    this.nextBudgetId =
+      this.budgets.reduce((maxId, budget) => Math.max(maxId, budget.id), 0) + 1;
   }
 
   findAll(month?: string): Budget[] {
@@ -41,7 +43,11 @@ export class BudgetsService implements OnModuleInit {
     return this.budgets
       .filter((budget) => budget.month === month)
       .map((budget) => ({ ...budget }))
-      .sort((a, b) => a.category.localeCompare(b.category));
+      .sort(
+        (a, b) =>
+          b.month.localeCompare(a.month) ||
+          a.category.localeCompare(b.category),
+      );
   }
 
   create(dto: CreateBudgetDto): Budget {
@@ -57,7 +63,7 @@ export class BudgetsService implements OnModuleInit {
     }
 
     const budget: Budget = {
-      id: randomUUID(),
+      id: this.nextBudgetId++,
       category: dto.category,
       month: dto.month,
       amount: fromCents(toCents(dto.amount)),
@@ -67,7 +73,8 @@ export class BudgetsService implements OnModuleInit {
   }
 
   update(id: string, dto: UpdateBudgetDto): Budget {
-    const index = this.budgets.findIndex((budget) => budget.id === id);
+    const numericId = Number(id);
+    const index = this.budgets.findIndex((budget) => budget.id === numericId);
     if (index === -1) throw new NotFoundException('Budget not found.');
     this.assertAmount(dto.amount);
 
@@ -80,7 +87,8 @@ export class BudgetsService implements OnModuleInit {
   }
 
   remove(id: string): void {
-    const index = this.budgets.findIndex((budget) => budget.id === id);
+    const numericId = Number(id);
+    const index = this.budgets.findIndex((budget) => budget.id === numericId);
     if (index === -1) throw new NotFoundException('Budget not found.');
     this.budgets.splice(index, 1);
   }
