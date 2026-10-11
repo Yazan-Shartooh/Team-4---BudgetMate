@@ -1,77 +1,84 @@
-# Finora frontend
+# Finora
 
-React + TypeScript application shell based on the Finora design template.
+Finora is BudgetMate's React and TypeScript personal-finance client. It provides shared transaction and income records, category budgets, a dashboard, monthly reports, and Excel exports.
 
-## Run locally
+## Setup
 
 Requires Node.js 22.12+ (Node 24 is also supported) and npm.
+
+Before a clean install/build, add the SheetJS `xlsx` dependency used by
+`src/utils/excelWorkbook.ts` to `package.json` and regenerate
+`package-lock.json` (Molham owns dependency changes).
 
 ```sh
 cd finora/client
 npm ci
+```
+
+Set `VITE_API_BASE_URL` to the base URL and API prefix supplied by the backend team before starting Vite:
+
+```powershell
+$env:VITE_API_BASE_URL = "<backend base URL and API prefix>"
 npm run dev
 ```
 
-Open the local URL printed by Vite.
+The backend URL, port, and route prefix are not included in this checkout. The frontend contract lists expected HTTP operations in [FRONTEND-CONTRACT.md](../FRONTEND-CONTRACT.md); confirm them with the backend team rather than guessing. If the API base is absent, requests fail visibly. No financial data is stored in browser storage or replaced with local demo records.
 
 ```sh
 npm run build
 npm run lint
+npm test
 npm run preview
 ```
 
-The build outputs to `dist/`. Configure production hosting to serve
-`index.html` for non-asset application URLs. Vite development/preview
-already supports direct routes and refresh.
+The production build writes to `dist/`. Production hosting must return `index.html` for application routes. Vite development and preview support direct route entry and refresh.
+
+## Data lifecycle and seed preparation
+
+The client fetches transactions and budgets into an in-memory React state provider. With the intended NestJS in-memory server running, a browser refresh starts fresh API requests and reloads the records currently held by that server. Restarting the server may reset its records. The NestJS app and startup scripts are not present in this checkout, so live server persistence is not currently verified.
+
+Prepare backend seed data with at least 20 valid transactions across two or more months, six or more expense categories and at least three current client income categories. Include current-month budgets demonstrating On track, Near limit, and Exceeded. Use valid `YYYY-MM-DD` transaction dates and category values from `src/types.ts`; shorthand dates such as `26/10` and obsolete category names are rejected by the client.
 
 ## Routes
 
-| Path | View |
-| --- | --- |
-| / | Dashboard |
-| /income | Income |
-| /transactions | Transactions |
-| /transactions/new | Add transaction |
-| /transactions/new?type=income | Add income |
-| /budgets | Budgets |
-| /reports/monthly | Monthly report |
-| /about | About us |
-| Any unknown path | Not found |
+| Path                            | View                        |
+| ------------------------------- | --------------------------- |
+| `/`                             | Dashboard                   |
+| `/income`                       | Income                      |
+| `/transactions`                 | Transactions                |
+| `/transactions/new`             | Add transaction placeholder |
+| `/transactions/new?type=income` | Add income placeholder      |
+| `/budgets`                      | Budgets                     |
+| `/reports/monthly`              | Monthly report              |
+| `/about`                        | About Finora                |
+| Any unknown path                | Not found                   |
 
-All feature views are explicitly marked placeholders. The Add Transaction
-route does not save data yet. No financial records, API calls, Redux
-store/provider, or persistence are implemented in this shell task.
-Redux dependencies are installed for the next integration steps.
+## Fixture checks
 
-## Team integration
+The feature fixture uses a Playwright-routed in-memory API; its refresh tests verify that the fixture server returns changed data after a page reload. These checks do **not** verify NestJS behavior.
 
-- Replace placeholder page content while keeping the documented routes.
-- Alaa owns the shared transaction form and will replace AddTransactionPage's
-  placeholder with that form. The income query selects income; other query
-  values default to expense.
-- Leave financial state and derived calculations to the agreed store/API work.
-- Molham owns `src/index.css`, the only stylesheet, imported in `main.tsx`.
-- Use class names and tokens from [UI-CONTRACT.md](../UI-CONTRACT.md).
-- Shared behavioral components such as Modal remain the feature owner's work;
-  this task provides their CSS, not their implementation.
-- Fonts load from Google Fonts when available and fall back to system fonts.
-  Branding assets are served locally.
+In PowerShell, start the fixture Vite server:
 
-The mobile navigation supports Escape, focus containment, focus restoration,
-an inert background, and closing after navigation or a desktop resize.
-Route changes update the document title and focus the main content.
+```powershell
+cd finora/client
+$env:VITE_API_BASE_URL = "/test-api"
+npm run dev -- --port 5178
+```
 
-## Verified shell behavior
+In another terminal, run the unit and browser checks:
 
-- Production build and ESLint pass.
-- All routes, including the income query and unknown URLs, support direct
-  entry and refresh; links, active states, and browser history work.
-- No page-level horizontal overflow across routes at 320, 360, 390, 640,
-  768, 1024, 1440, and 1920px viewport widths.
-- Mobile drawer focus containment, Escape restoration, route-change close,
-  desktop resize, and short-landscape scrolling pass browser checks.
-- Shared table overflow stays inside its wrapper; long native dialogs
-  remain inside the phone viewport and scroll internally.
-- Reduced-motion behavior and desktop/mobile screenshots were checked.
+```powershell
+cd finora/client
+npm test
+node tests/features.browser.mjs
+```
 
-These checks cover the shell and styling, not unimplemented financial flows.
+The browser script requires Chrome and an existing Playwright installation. If Playwright is outside this project, set `PLAYWRIGHT_MODULE_PATH` to its `playwright/index.mjs`; set `FEATURE_TEST_URL` to override the fixture origin. Use the backend URL, not `/test-api`, for live integration checks.
+
+## Demonstration
+
+1. **Molham:** Describe the missing-money problem, client/API architecture and in-memory data lifecycle; show dashboard totals, category spending, budget alerts and recent activity.
+2. **Alaa:** Add income and an expense, submit one invalid amount, correct and delete a transaction, set a Food budget, then show spending exceeding its limit.
+3. **Nagham:** Add income, explain source percentages, change its category/month, then switch report months. Explain savings as income minus expenses and demonstrate the report workbook, including its budget comparison.
+
+Use a running backend for the presentation and state clearly that a backend restart may reset in-memory records. Core blockers in this checkout are the missing NestJS app/endpoint implementation, absent authoritative backend URL, and seed-date/category alignment; do not present the fixture as live-server verification.
