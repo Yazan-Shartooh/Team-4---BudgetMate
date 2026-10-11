@@ -1,0 +1,13 @@
+:root {
+  --color-navy: #05244b;
+  --color-teal: #00aa9f;
+  --color-teal-light: #00c7b8;
+  --color-teal-dark: #006565;
+}
+
+body {
+  margin: 0;
+  background-color: #ffffff;
+  color: var(--color-navy);
+  font-family: Arial, sans-serif;
+}

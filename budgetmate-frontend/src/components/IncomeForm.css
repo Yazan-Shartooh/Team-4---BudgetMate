@@ -1,0 +1,61 @@
+.income-form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.income-form__field {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.income-form__field label {
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.income-form__field input,
+.income-form__field select,
+.income-form__field textarea {
+  box-sizing: border-box;
+  width: 100%;
+  padding: 12px;
+  border: 1px solid var(--color-navy);
+  border-radius: 6px;
+  background-color: #ffffff;
+  color: var(--color-navy);
+  font: inherit;
+}
+
+.income-form__field textarea {
+  resize: vertical;
+}
+
+.income-form__field input:focus,
+.income-form__field select:focus,
+.income-form__field textarea:focus {
+  outline: 2px solid var(--color-teal);
+  outline-offset: 2px;
+}
+
+.income-form__submit {
+  padding: 12px 20px;
+  border: none;
+  border-radius: 6px;
+  background-color: var(--color-teal-dark);
+  color: #ffffff;
+  font: inherit;
+  font-weight: 600;
+}
+
+.income-form__submit:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+.income-form__error {
+  margin: 0;
+  color: var(--color-navy);
+  font-size: 14px;
+  font-weight: 600;
+}
