@@ -1,4 +1,4 @@
-export const incomeCategories = ["Salary", "Freelance", "Gift", "Other Income"];
+export const incomeCategories = ["Salary", "Freelance", "Other Income"];
 export const expenseCategories = [
   "Food",
   "Transport",
@@ -139,7 +139,7 @@ export const seedTransactions = [
     id: 15,
     type: "income",
     amount: 50,
-    category: "Gift",
+    category: "Other Income",
     date: "26/09",
     note: "Birthday gift",
     createdAt: "2026-09-25T10:00:00.000Z",

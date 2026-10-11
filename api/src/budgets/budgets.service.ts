@@ -39,9 +39,18 @@ export class BudgetsService implements OnModuleInit {
   }
 
   findAll(month?: string): Budget[] {
-    this.assertMonth(month);
+    if (month) {
+      this.assertMonth(month);
+      return this.budgets
+        .filter((budget) => budget.month === month)
+        .map((budget) => ({ ...budget }))
+        .sort(
+          (a, b) =>
+            b.month.localeCompare(a.month) ||
+            a.category.localeCompare(b.category),
+        );
+    }
     return this.budgets
-      .filter((budget) => budget.month === month)
       .map((budget) => ({ ...budget }))
       .sort(
         (a, b) =>
@@ -172,6 +181,30 @@ export class BudgetsService implements OnModuleInit {
       );
     }
     this.assertAmount(candidate.amount);
+  }
+
+  upsert(dto: CreateBudgetDto): Budget {
+    this.assertValidBudget(dto);
+    const existingIndex = this.budgets.findIndex(
+      (b) => b.month === dto.month && b.category === dto.category,
+    );
+    if (existingIndex !== -1) {
+      const updated: Budget = {
+        ...this.budgets[existingIndex],
+        amount: fromCents(toCents(dto.amount)),
+      };
+      this.budgets[existingIndex] = updated;
+      return { ...updated };
+    }
+
+    const budget: Budget = {
+      id: this.nextBudgetId++,
+      category: dto.category,
+      month: dto.month,
+      amount: fromCents(toCents(dto.amount)),
+    };
+    this.budgets.push(budget);
+    return { ...budget };
   }
 
   private assertAmount(amount: number): void {

@@ -12,7 +12,7 @@ async function bootstrap(): Promise<void> {
   app.enableCors({
     origin: process.env.CLIENT_ORIGIN?.split(',') ?? [
       'http://localhost:5173',
-      'http://127.0.0.1:5173',
+      // 'http://127.0.0.1:5173',
     ],
   });
 

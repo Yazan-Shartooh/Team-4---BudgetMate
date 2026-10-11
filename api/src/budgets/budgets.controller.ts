@@ -9,6 +9,7 @@ import {
   Patch,
   Post,
   Query,
+  Put
 } from '@nestjs/common';
 import type { Budget, BudgetUsage } from '../types';
 import { CreateBudgetDto } from './dto/create-budget.dto';
@@ -19,8 +20,13 @@ import { BudgetsService } from './budgets.service';
 export class BudgetsController {
   constructor(private readonly budgetsService: BudgetsService) {}
 
+  @Put()
+  save(@Body() dto: CreateBudgetDto): Budget {
+    return this.budgetsService.upsert(dto);
+  }
+
   @Get()
-  findAll(@Query('month') month: string): Budget[] {
+  findAll(@Query('month') month?: string): Budget[] {
     return this.budgetsService.findAll(month);
   }
 
