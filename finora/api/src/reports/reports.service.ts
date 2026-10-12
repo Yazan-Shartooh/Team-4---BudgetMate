@@ -10,7 +10,7 @@ import {
   toCents,
 } from '../common/utils';
 import { TransactionsService } from '../transactions/transactions.service';
-import type { BudgetUsage, Transaction } from '../types';
+import type { Transaction } from '../types';
 
 export interface CategorySpending {
   category: string;
@@ -64,11 +64,10 @@ export class ReportsService {
     };
   }
 
-  getMonthlySummary(month?: string) {
+  getMonthlySummary(month: string) {
     this.assertMonth(month);
-    const requestedMonth = month as string;
     const transactions = this.transactionsService.findAll({
-      month: requestedMonth,
+      month: month,
     });
     const totals = this.calculateTotals(transactions);
     const spendingByCategory = this.getSpendingByCategory(
@@ -78,12 +77,12 @@ export class ReportsService {
     const largest = spendingByCategory[0];
 
     return {
-      month: requestedMonth,
+      month: month,
       hasTransactions: transactions.length > 0,
       message: transactions.length === 0 ? 'No transactions this month' : null,
       ...totals,
       spendingByCategory,
-      budgetComparison: this.budgetsService.getUsage(requestedMonth),
+      budgetComparison: this.budgetsService.getUsage(month),
       largestCategory: largest
         ? {
             category: largest.category,
@@ -94,7 +93,7 @@ export class ReportsService {
     };
   }
 
-  getMonths(): string[] {
+  getMonths() {
     const months = new Set(
       this.transactionsService
         .findAll()
@@ -160,11 +159,11 @@ export class ReportsService {
       );
   }
 
-  private sumCents(transactions: Transaction[]): number {
+  private sumCents(transactions: Transaction[]) {
     return transactions.reduce((sum, item) => sum + toCents(item.amount), 0);
   }
 
-  private assertMonth(month: string | undefined): void {
+  private assertMonth(month: string) {
     if (!month)
       throw new BadRequestException('Month is required in YYYY-MM format.');
     if (!isValidMonth(month))
