@@ -6,7 +6,7 @@ export class CategoriesController {
   constructor(private readonly categoriesService: CategoriesService) {}
 
   @Get()
-  getCategories(): { income: string[]; expense: string[] } {
+  getCategories() {
     return {
       income: this.categoriesService.getIncomeCategories(),
       expense: this.categoriesService.getExpenseCategories(),
@@ -14,12 +14,12 @@ export class CategoriesController {
   }
 
   @Get('income')
-  getIncomeCategories(): string[] {
+  getIncomeCategories() {
     return this.categoriesService.getIncomeCategories();
   }
 
   @Get('expense')
-  getExpenseCategories(): string[] {
+  getExpenseCategories() {
     return this.categoriesService.getExpenseCategories();
   }
 }

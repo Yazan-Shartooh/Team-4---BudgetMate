@@ -15,35 +15,29 @@ const INCOME_CATEGORIES = ['Salary', 'Freelance', 'Other Income'];
 
 @Injectable()
 export class CategoriesService {
-  getIncomeCategories(): string[] {
+  getIncomeCategories() {
     return [...INCOME_CATEGORIES];
   }
 
-  getExpenseCategories(): string[] {
+  getExpenseCategories() {
     return [...EXPENSE_CATEGORIES];
   }
 
-  isValidCategory(type: TransactionType, name: string): boolean {
+  isValidCategory(type: TransactionType, name: string) {
     return type === 'income'
-      ? INCOME_CATEGORIES.includes(name as (typeof INCOME_CATEGORIES)[number])
-      : EXPENSE_CATEGORIES.includes(
-          name as (typeof EXPENSE_CATEGORIES)[number],
-        );
+      ? INCOME_CATEGORIES.includes(name)
+      : EXPENSE_CATEGORIES.includes(name);
   }
 
-  isExpenseCategory(name: string): boolean {
-    return EXPENSE_CATEGORIES.includes(
-      name as (typeof EXPENSE_CATEGORIES)[number],
-    );
+  isExpenseCategory(name: string) {
+    return EXPENSE_CATEGORIES.includes(name);
   }
 
-  isIncomeCategory(name: string): boolean {
-    return INCOME_CATEGORIES.includes(
-      name as (typeof INCOME_CATEGORIES)[number],
-    );
+  isIncomeCategory(name: string) {
+    return INCOME_CATEGORIES.includes(name);
   }
 
-  isKnownCategory(name: string): boolean {
+  isKnownCategory(name: string) {
     return this.isExpenseCategory(name) || this.isIncomeCategory(name);
   }
 }
