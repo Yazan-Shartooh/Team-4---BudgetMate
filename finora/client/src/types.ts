@@ -78,7 +78,7 @@ export interface ApiError {
   status?: number;
   fieldErrors?: Partial<Record<FieldName, string>>;
 }
-/** Proposed wire format; no corresponding backend endpoints exist yet. */
+/** Legacy envelope type for external adapters; NestJS returns raw records. */
 export interface ApiSuccess<T> {
   data: T;
 }
@@ -88,7 +88,7 @@ export interface ApiFailure {
 export interface ApiRequestOptions {
   signal?: AbortSignal;
 }
-/** Helpers unwrap data, validate responses, and reject with normalized ApiError. */
+/** Helpers validate responses and reject with normalized ApiError. */
 export interface FrontendApi {
   getCategories(options?: ApiRequestOptions): Promise<CategoryLists>;
   getTransactions(options?: ApiRequestOptions): Promise<Transaction[]>;

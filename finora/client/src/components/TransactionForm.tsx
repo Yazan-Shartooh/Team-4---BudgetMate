@@ -30,12 +30,12 @@ function TransactionFields({ transaction, initialType = 'expense', lockedType, p
     if (busy || lock.current) return;
     const form = event.currentTarget;
     const fieldErrors: NonNullable<ApiError['fieldErrors']> = {};
-    if (!/^\d+(\.\d{1,2})?$/.test(amount.trim()) || Number(amount) <= 0 || Number(amount) > 10_000_000) fieldErrors.amount = 'Enter an amount greater than zero, up to $10,000,000, with at most two decimal places.';
+    if (!/^\d+(\.\d{1,2})?$/.test(amount.trim()) || Number(amount) <= 0 || Number(amount) > 1_000_000) fieldErrors.amount = 'Enter an amount greater than zero, up to $1,000,000, with at most two decimal places.';
     if (!(categories as readonly string[]).includes(category)) fieldErrors.category = 'Choose a category matching the transaction type.';
     const parsed = new Date(`${date}T12:00:00`);
     const [year, month, day] = date.split('-').map(Number);
     if (!/^(?!0000)\d{4}-\d{2}-\d{2}$/.test(date) || !Number.isFinite(parsed.getTime()) || parsed.getFullYear() !== year || parsed.getMonth() + 1 !== month || parsed.getDate() !== day || date > today()) fieldErrors.date = 'Choose a valid date on or before today.';
-    if (note.trim().length > 120) fieldErrors.note = 'Keep the note to 120 characters or fewer.';
+    if (note.trim().length > 200) fieldErrors.note = 'Keep the note to 200 characters or fewer.';
     if (Object.keys(fieldErrors).length) {
       setLocalError({ code: 'VALIDATION_ERROR', message: 'Please correct the highlighted fields.', fieldErrors });
       requestAnimationFrame(() => form.querySelector<HTMLElement>('[aria-invalid="true"]')?.focus());
@@ -68,7 +68,7 @@ function TransactionFields({ transaction, initialType = 'expense', lockedType, p
       <div className="field"><label htmlFor={`${id}-date`}>Date</label><input id={`${id}-date`} type="date" required max={today()} value={date} disabled={busy} onChange={(event) => setDate(event.target.value)}
         aria-invalid={invalid('date')} aria-describedby={invalid('date') ? `${id}-date-error` : undefined} />{feedback('date')}</div>
     </div>
-    <div className="field"><label htmlFor={`${id}-note`}>Note (optional)</label><input id={`${id}-note`} value={note} disabled={busy} maxLength={120} onChange={(event) => setNote(event.target.value)}
+    <div className="field"><label htmlFor={`${id}-note`}>Note (optional)</label><input id={`${id}-note`} value={note} disabled={busy} maxLength={200} onChange={(event) => setNote(event.target.value)}
       aria-invalid={invalid('note')} aria-describedby={invalid('note') ? `${id}-note-error` : undefined} />{feedback('note')}</div>
     {visibleError && <ErrorMessage message={visibleError.message} />}
     {busy && <p role="status">Saving transaction…</p>}

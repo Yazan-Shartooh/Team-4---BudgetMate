@@ -17,7 +17,7 @@ function BudgetFields({ month, initialBudget, initialCategory, pending, error, o
     event.preventDefault();
     if (busy || lock.current) return;
     const fieldErrors: NonNullable<ApiError['fieldErrors']> = {};
-    if (!/^\d+(\.\d{1,2})?$/.test(amount.trim()) || Number(amount) <= 0 || Number(amount) > 10_000_000) fieldErrors.amount = 'Enter a positive budget up to $10,000,000 with at most two decimals.';
+    if (!/^\d+(\.\d{1,2})?$/.test(amount.trim()) || Number(amount) <= 0 || Number(amount) > 1_000_000) fieldErrors.amount = 'Enter a positive budget up to $1,000,000 with at most two decimals.';
     if (!expenseCategories.includes(category)) fieldErrors.category = 'Choose an expense category.';
     if (!/^(?!0000)\d{4}-(0[1-9]|1[0-2])$/.test(month)) fieldErrors.month = 'Choose a valid month.';
     if (Object.keys(fieldErrors).length) {

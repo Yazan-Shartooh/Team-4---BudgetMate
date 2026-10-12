@@ -10,9 +10,11 @@ async function bootstrap(): Promise<void> {
 
   app.setGlobalPrefix('api');
   app.enableCors({
-    origin: process.env.CLIENT_ORIGIN?.split(',') ?? [
+    origin: process.env.CLIENT_ORIGIN?.split(',').map((origin) => origin.trim()).filter(Boolean) ?? [
       'http://localhost:5173',
-      // 'http://127.0.0.1:5173',
+      'http://127.0.0.1:5173',
+      'http://localhost:4173',
+      'http://127.0.0.1:4173',
     ],
   });
 
@@ -29,7 +31,7 @@ async function bootstrap(): Promise<void> {
 
   const port = Number(process.env.PORT) || 3000;
   await app.listen(port);
-  console.log(`BudgetMate API is running at http://localhost:${port}/api`);
+  console.log(`Finora API is running at http://localhost:${port}/api`);
 }
 
 void bootstrap();

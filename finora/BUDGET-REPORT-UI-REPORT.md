@@ -1,3 +1,5 @@
+> Historical handoff: this describes an earlier stage. Current setup, API/state architecture and verification are in the root README, FRONTEND-CONTRACT.md and docs/FINAL-CHECKLIST.md.
+
 # Budget and monthly report UI handoff
 
 Implemented MonthFilter, CategoryBreakdown, MonthlyReportSection and MonthlyReportPage. BudgetsSection now uses the shared MonthFilter by default. Both pages accept optional section props (`budgets` / `report`) for fixture-backed previews without a Redux provider. Sections take shared domain/selector result types; no financial calculations were added outside selectors.ts.

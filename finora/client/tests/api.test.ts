@@ -26,7 +26,7 @@ function fixture(payload: unknown, status = 200) {
   });
 }
 
-test("all eight operations use contract URLs, methods, bodies, envelopes and authoritative responses", async () => {
+test("all eight operations use contract URLs, methods, bodies and authoritative responses", async () => {
   const responses = [
     { income: incomeCategories, expense: expenseCategories },
     [transaction],
@@ -51,7 +51,7 @@ test("all eight operations use contract URLs, methods, bodies, envelopes and aut
         new Headers(init?.headers).get("Accept"),
         "application/json",
       );
-      return new Response(JSON.stringify({ data: responses.shift() }));
+      return new Response(JSON.stringify(responses.shift()));
     },
   });
   await api.getCategories();
@@ -76,7 +76,7 @@ test("all eight operations use contract URLs, methods, bodies, envelopes and aut
       [`${baseUrl}/categories`, "GET"],
       [`${baseUrl}/transactions`, "GET"],
       [`${baseUrl}/transactions`, "POST"],
-      [`${baseUrl}/transactions/7`, "PUT"],
+      [`${baseUrl}/transactions/7`, "PATCH"],
       [`${baseUrl}/transactions/7`, "DELETE"],
       [`${baseUrl}/budgets`, "GET"],
       [`${baseUrl}/budgets`, "PUT"],
@@ -185,28 +185,28 @@ test("network, server and non-JSON failures never turn into seed data or leak ra
 
 test("malformed successes, invalid records and duplicate identities are rejected", async () => {
   const invalid = [
-    [transaction],
-    { data: null },
-    { data: [transaction, transaction] },
-    { data: [{ ...transaction, date: "26/10" }] },
-    { data: [{ ...transaction, date: "2023-02-29" }] },
-    { data: [{ ...transaction, category: "Salary" }] },
-    { data: [{ ...transaction, amount: 0.001 }] },
-    { data: [{ ...transaction, amount: 0 }] },
-    { data: [{ ...transaction, id: "7" }] },
-    { data: [{ ...transaction, date: "9999-01-01" }] },
+    null,
+    { data: [transaction] },
+    [transaction, transaction],
+    [{ ...transaction, date: "26/10" }],
+    [{ ...transaction, date: "2023-02-29" }],
+    [{ ...transaction, category: "Salary" }],
+    [{ ...transaction, amount: 0.001 }],
+    [{ ...transaction, amount: 0 }],
+    [{ ...transaction, id: "7" }],
+    [{ ...transaction, date: "9999-01-01" }],
   ];
   for (const payload of invalid)
     await assert.rejects(fixture(payload).getTransactions(), {
       code: "INVALID_RESPONSE",
     });
   await assert.rejects(
-    fixture({ data: [budget, { ...budget, id: 3 }] }).getBudgets(),
+    fixture([budget, { ...budget, id: 3 }]).getBudgets(),
     { code: "INVALID_RESPONSE" },
   );
   await assert.rejects(
     fixture({
-      data: { income: ["Salary"], expense: expenseCategories },
+      income: ["Salary"], expense: expenseCategories,
     }).getCategories(),
     { code: "INVALID_RESPONSE" },
   );
@@ -214,20 +214,20 @@ test("malformed successes, invalid records and duplicate identities are rejected
 
 test("responses cannot update or delete the wrong identity", async () => {
   await assert.rejects(
-    fixture({ data: { ...transaction, id: 8 } }).updateTransaction({
+    fixture({ ...transaction, id: 8 }).updateTransaction({
       id: 7,
       changes: transaction,
     }),
     { code: "INVALID_RESPONSE" },
   );
-  await assert.rejects(fixture({ data: 8 }).deleteTransaction(7), {
+  await assert.rejects(fixture(8).deleteTransaction(7), {
     code: "INVALID_RESPONSE",
   });
-  await assert.rejects(fixture({ data: 3 }).deleteBudget(2), {
+  await assert.rejects(fixture(3).deleteBudget(2), {
     code: "INVALID_RESPONSE",
   });
   await assert.rejects(
-    fixture({ data: { ...budget, month: "2024-03" } }).saveBudget(budget),
+    fixture({ ...budget, month: "2024-03" }).saveBudget(budget),
     { code: "INVALID_RESPONSE" },
   );
 });
@@ -305,4 +305,20 @@ test("pre-aborted requests do not fetch; active cancellations and timeouts norma
     message: /timed out.*may have saved/,
   });
   assert.equal(calls, 2);
+});
+
+
+test("NestJS 204 deletes resolve the requested identity", async () => {
+  const api = createApiClient({ baseUrl, fetch: async () => new Response(null, { status: 204 }) });
+  assert.equal(await api.deleteTransaction(7), 7);
+  assert.equal(await api.deleteBudget(2), 2);
+});
+
+
+test("editing a blank optional note explicitly clears the NestJS value", async () => {
+  const api = createApiClient({ baseUrl, fetch: async (_url, init) => {
+    assert.equal(JSON.parse(String(init?.body)).note, "");
+    return new Response(JSON.stringify({ ...transaction, note: "" }));
+  }});
+  assert.equal((await api.updateTransaction({ id: 7, changes: { ...transaction, note: undefined } })).note, "");
 });

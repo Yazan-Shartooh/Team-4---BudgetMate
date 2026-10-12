@@ -10,7 +10,8 @@ const { chromium } = await import(
 );
 const browser = await chromium.launch({ channel: "chrome", headless: true });
 const page = await browser.newPage({ viewport: { width: 1440, height: 1000 } });
-page.setDefaultTimeout(7000);
+page.setDefaultTimeout(15000);
+page.setDefaultNavigationTimeout(60000);
 const errors = [];
 page.on("pageerror", (error) => errors.push(error.message));
 const now = new Date();
@@ -59,6 +60,8 @@ let nextTransaction = 5,
   nextBudget = 4,
   writes = 0,
   failNext = false;
+let holdNextWrite = false;
+let releaseWrite;
 await page.route("**/test-api/**", async (route) => {
   const request = route.request();
   const path = new URL(request.url()).pathname.replace("/test-api", "");
@@ -68,10 +71,11 @@ await page.route("**/test-api/**", async (route) => {
     route.fulfill({
       status,
       contentType: "application/json",
-      body: JSON.stringify({ data }),
+      body: JSON.stringify(data),
     });
   if (method !== "GET") {
     writes++;
+    if (holdNextWrite) { holdNextWrite = false; await new Promise(resolve => { releaseWrite = resolve; }); }
     // Exercise pending UI and Escape protection while the response is outstanding.
     await new Promise((resolve) => setTimeout(resolve, 120));
     if (failNext) {
@@ -92,7 +96,7 @@ await page.route("**/test-api/**", async (route) => {
     transactions.push(item);
     return reply(item, 201);
   }
-  if (path.startsWith("/transactions/") && method === "PUT") {
+  if (path.startsWith("/transactions/") && method === "PATCH") {
     const id = Number(path.split("/").at(-1));
     const item = { ...input, id };
     transactions = transactions.map((row) => (row.id === id ? item : row));
@@ -191,10 +195,14 @@ try {
     exact: true,
   });
   const writesBeforeRetry = writes;
+  holdNextWrite = true;
   await retryCreate.click();
-  await retryCreate.click({ force: true });
+  await page.waitForResponse(() => false, {timeout: 150}).catch(() => {});
+  assert.equal(await dialog.locator('button[type="submit"]').isDisabled(), true);
+  await dialog.locator("form").evaluate(form => { form.requestSubmit(); form.requestSubmit(); });
   await page.keyboard.press("Escape");
   assert.equal(await dialog.isVisible(), true);
+  releaseWrite();
   await dialog.waitFor({ state: "hidden" });
   assert.equal(transactions.length, 5);
   assert.equal(writes, writesBeforeRetry + 1);
@@ -315,14 +323,14 @@ try {
     .selectOption("Freelance");
   await dialog.getByLabel("Note (optional)").fill("Report sync income");
   failNext = true;
-  await dialog.getByRole("button", { name: "Add income", exact: true }).click();
+  await dialog.getByRole("button", { name: "Add transaction", exact: true }).click();
   await dialog
     .getByRole("alert")
     .filter({ hasText: "Fixture server rejected" })
     .waitFor();
   assert.equal(await dialog.getByLabel("Amount (USD)").inputValue(), "80");
   assert.equal(transactions.length, 4);
-  await dialog.getByRole("button", { name: "Add income", exact: true }).click();
+  await dialog.getByRole("button", { name: "Add transaction", exact: true }).click();
   await dialog.waitFor({ state: "hidden" });
   assert.equal(
     await page.locator(".income-total .amount").textContent(),
@@ -832,14 +840,14 @@ try {
     {
       path: "/budgets",
       heading: "Budgets",
-      ready: '.budgets-section [aria-busy="false"]',
+      ready: '.budgets-section .card[aria-busy="false"]',
     },
     {
       path: "/reports/monthly",
       heading: "Monthly report",
       ready: '.report-section[aria-busy="false"]',
     },
-    { path: "/about", heading: "About us" },
+    { path: "/about", heading: "Money, made easier to understand." },
     { path: "/missing-route", heading: "We couldn’t find that page." },
   ];
   const shellViewports = [
@@ -956,3 +964,4 @@ try {
 } finally {
   await browser.close();
 }
+

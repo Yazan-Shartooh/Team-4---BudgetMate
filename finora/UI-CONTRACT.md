@@ -1,3 +1,5 @@
+> Historical handoff: this describes an earlier stage. Current setup, API/state architecture and verification are in the root README, FRONTEND-CONTRACT.md and docs/FINAL-CHECKLIST.md.
+
 # Finora UI contract
 
 ## Shell implementation status
