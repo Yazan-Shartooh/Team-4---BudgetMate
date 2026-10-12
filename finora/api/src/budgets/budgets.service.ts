@@ -7,8 +7,8 @@ import {
 } from '@nestjs/common';
 import { CategoriesService } from '../categories/categories.service';
 import { fromCents, isValidMonth, round1, toCents } from '../common/utils';
-import { SEED_BUDGETS, type SeedBudget } from '../seeds/seed-data';
-import type { Budget, BudgetStatus, BudgetUsage } from '../types';
+import { SEED_BUDGETS } from '../seeds/seed-data';
+import type { Budget, BudgetStatus, BudgetUsage, SeedBudget } from '../types';
 import { TransactionsService } from '../transactions/transactions.service';
 import { CreateBudgetDto } from './dto/create-budget.dto';
 import { UpdateBudgetDto } from './dto/update-budget.dto';

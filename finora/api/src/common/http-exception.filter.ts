@@ -18,45 +18,24 @@ interface ErrorResponseBody {
 export class HttpExceptionFilter implements ExceptionFilter {
   private readonly logger = new Logger(HttpExceptionFilter.name);
 
-  catch(exception: unknown, host: ArgumentsHost): void {
+  catch(exception: unknown, host: ArgumentsHost) {
     const context = host.switchToHttp();
     const response = context.getResponse<Response>();
     const request = context.getRequest<Request>();
 
-    let statusCode = HttpStatus.INTERNAL_SERVER_ERROR;
-    let error = 'Internal Server Error';
-    let messages = ['Something went wrong. Please try again.'];
-
     if (exception instanceof HttpException) {
-      statusCode = exception.getStatus();
-      const body = exception.getResponse();
-
-      if (typeof body === 'string') {
-        messages = [body];
-        error = exception.name;
-      } else if (body && typeof body === 'object') {
-        const bodyRecord = body as Record<string, unknown>;
-        if (typeof bodyRecord.error === 'string') error = bodyRecord.error;
-        if (Array.isArray(bodyRecord.message)) {
-          messages = bodyRecord.message.map(String);
-        } else if (typeof bodyRecord.message === 'string') {
-          messages = [bodyRecord.message];
-        }
-      }
-    } else {
-      const stack = exception instanceof Error ? exception.stack : undefined;
-      this.logger.error(
-        `${request.method} ${request.url} failed unexpectedly`,
-        stack,
-      );
+      response.status(exception.getStatus()).json(exception.getResponse());
+      return;
     }
 
-    const body: ErrorResponseBody = {
-      statusCode,
-      error,
-      message: messages.length > 0 ? messages : ['Request failed.'],
-    };
-
-    response.status(statusCode).json(body);
+    this.logger.error(exception);
+    response.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
+      statusCode: HttpStatus.INTERNAL_SERVER_ERROR,
+      message: 'Internal server error',
+      path: request.url,
+      timestamp: new Date().toISOString(),
+      method: request.method,
+      team: 'B4F',
+    });
   }
 }

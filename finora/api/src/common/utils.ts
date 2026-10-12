@@ -1,4 +1,3 @@
-/** Convert money to integer cents to avoid floating-point arithmetic drift. */
 export function toCents(value: number): number {
   return Math.round((value + Number.EPSILON) * 100);
 }
@@ -11,12 +10,11 @@ export function round1(value: number): number {
   return Math.round((value + Number.EPSILON) * 10) / 10;
 }
 
-export function isValidMonth(value: unknown): value is string {
+export function isValidMonth(value: unknown) {
   return typeof value === 'string' && /^\d{4}-(0[1-9]|1[0-2])$/.test(value);
 }
 
-/** Validate both the YYYY-MM-DD shape and the actual calendar date. */
-export function isValidDate(value: unknown): value is string {
+export function isValidDate(value: unknown) {
   if (typeof value !== 'string' || !/^\d{4}-\d{2}-\d{2}$/.test(value)) {
     return false;
   }
@@ -34,8 +32,7 @@ export function isValidDate(value: unknown): value is string {
   );
 }
 
-/** Uses the server's local calendar date, as required by the assignment. */
-export function todayISO(): string {
+export function todayISO() {
   const now = new Date();
   return `${now.getFullYear()}-${pad2(now.getMonth() + 1)}-${pad2(now.getDate())}`;
 }
@@ -44,10 +41,10 @@ export function currentMonth(): string {
   return todayISO().slice(0, 7);
 }
 
-export function monthOf(date: string): string {
+export function monthOf(date: string) {
   return date.slice(0, 7);
 }
 
-function pad2(value: number): string {
+export function pad2(value: number): string {
   return String(value).padStart(2, '0');
 }

@@ -13,8 +13,13 @@ import {
   todayISO,
   toCents,
 } from '../common/utils';
-import { SEED_TRANSACTIONS, type SeedTransaction } from '../seeds/seed-data';
-import type { Transaction, TransactionFilter, TransactionType } from '../types';
+import { SEED_TRANSACTIONS } from '../seeds/seed-data';
+import type {
+  Transaction,
+  TransactionFilter,
+  TransactionType,
+  SeedTransaction,
+} from '../types';
 import { CreateTransactionDto } from './dto/create-transaction.dto';
 import { FilterTransactionDto } from './dto/filter-transaction.dto';
 import { UpdateTransactionDto } from './dto/update-transaction.dto';
