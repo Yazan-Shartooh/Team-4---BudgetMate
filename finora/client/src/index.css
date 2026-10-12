@@ -1227,3 +1227,67 @@ dialog.modal {
     transition: none !important;
   }
 }
+
+/* Integrated feature requirements; all values reuse the shared theme. */
+.transactions-entry {
+  padding: var(--card-padding);
+}
+.budgets-table tbody th {
+  background: var(--color-surface);
+  color: var(--color-text);
+}
+.budgets-table tbody tr:last-child th {
+  border-bottom: 0;
+}
+.budgets-usage .progress {
+  --budget-progress-color: var(--color-teal);
+  accent-color: var(--budget-progress-color);
+}
+.budgets-usage .progress[data-status="near-limit"] {
+  --budget-progress-color: var(--color-progress-near);
+}
+.budgets-usage .progress[data-status="exceeded"] {
+  --budget-progress-color: var(--color-progress-exceeded);
+}
+.budgets-usage .progress::-webkit-progress-value {
+  background: var(--budget-progress-color);
+}
+.budgets-usage .progress::-moz-progress-bar {
+  background: var(--budget-progress-color);
+}
+.report-summary .amount {
+  font-size: var(--font-size-stat);
+  font-variant-numeric: tabular-nums;
+  overflow-wrap: anywhere;
+}
+/* Gaps in the notification stack must not intercept page controls. */
+.toast-queue {
+  pointer-events: none;
+}
+.toast {
+  pointer-events: auto;
+}
+.toast p {
+  overflow-wrap: anywhere;
+  min-width: 0;
+}
+.app-content,
+.page-stack,
+.field,
+.month-filter {
+  min-width: 0;
+  }
+
+.about-intro {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-6);
+  padding: var(--card-padding);
+}
+.about-intro p { margin-top: var(--space-3); }
+.about-brand { width: 64px; height: 64px; flex-shrink: 0; }
+.about-details { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+@media (max-width: 640px) {
+  .about-intro { flex-direction: column; }
+  .about-details { grid-template-columns: minmax(0, 1fr); }
+}
