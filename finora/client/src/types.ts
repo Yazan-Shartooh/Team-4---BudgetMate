@@ -314,7 +314,7 @@ export interface DeleteTransactionModalProps {
 export const pageRoutes = {
   dashboard: "/",
   transactions: "/transactions",
-  addTransaction: "/transactions/new",
+  
   income: "/income",
   budgets: "/budgets",
   report: "/reports/monthly",

@@ -5,17 +5,14 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { HttpExceptionFilter } from './common/http-exception.filter';
 
-async function bootstrap(): Promise<void> {
+async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
   app.setGlobalPrefix('api');
   app.enableCors({
-    origin: process.env.CLIENT_ORIGIN?.split(',').map((origin) => origin.trim()).filter(Boolean) ?? [
-      'http://localhost:5173',
-      'http://127.0.0.1:5173',
-      'http://localhost:4173',
-      'http://127.0.0.1:4173',
-    ],
+
+    origin: ['http://localhost:5173'],
+
   });
 
   app.useGlobalPipes(
@@ -23,8 +20,6 @@ async function bootstrap(): Promise<void> {
       whitelist: true,
       forbidNonWhitelisted: true,
       transform: true,
-      // Do not enable implicit conversion: a JSON string such as "12" must not
-      // silently become the number 12 for a money amount.
     }),
   );
   app.useGlobalFilters(new HttpExceptionFilter());
@@ -34,4 +29,4 @@ async function bootstrap(): Promise<void> {
   console.log(`Finora API is running at http://localhost:${port}/api`);
 }
 
-void bootstrap();
+bootstrap();

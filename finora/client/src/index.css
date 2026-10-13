@@ -1030,6 +1030,24 @@ dialog.modal {
   grid-template-columns: var(--form-columns);
   gap: var(--grid-gap);
 }
+.income-section .income-total {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.income-section .income-total .amount {
+  font-size: clamp(2rem, 3vw, 2.75rem);
+  font-weight: var(--font-weight-bold);
+  line-height: 1.1;
+}
+
+.income-section .income-total .text-muted {
+  max-width: 32ch;
+}
+
 .income-total,
 .income-sources,
 .report-breakdown {
@@ -1040,6 +1058,7 @@ dialog.modal {
   background: var(--color-active-bg);
   color: var(--color-active-text);
   border-radius: var(--radius-card);
+  margin: 1% 3%;
 }
 .report-note--overspent {
   background: var(--color-error-bg);
@@ -1141,9 +1160,7 @@ dialog.modal {
   .app-breadcrumbs {
     display: none;
   }
-  .app-add-transaction {
-    padding-inline: var(--space-3);
-  }
+
   .app-sidebar {
     max-width: calc(100% - var(--space-10));
     transform: translateX(-100%);
@@ -1229,9 +1246,7 @@ dialog.modal {
 }
 
 /* Integrated feature requirements; all values reuse the shared theme. */
-.transactions-entry {
-  padding: var(--card-padding);
-}
+
 .budgets-table tbody th {
   background: var(--color-surface);
   color: var(--color-text);

@@ -16,7 +16,7 @@ export class ReportsController {
   }
 
   @Get('months')
-  getMonths(): string[] {
+  getMonths() {
     return this.reportsService.getMonths();
   }
 }

@@ -6,7 +6,6 @@ import Footer from './components/Footer';
 import DashboardPage from './pages/DashboardPage';
 import IncomePage from './pages/IncomePage';
 import TransactionsPage from './pages/TransactionsPage';
-import AddTransactionPage from './pages/AddTransactionPage';
 import BudgetsPage from './pages/BudgetsPage';
 import MonthlyReportPage from './pages/MonthlyReportPage';
 import AboutPage from './pages/AboutPage';
@@ -66,7 +65,6 @@ export default function App() {
             <Route path={pageRoutes.dashboard} element={<DashboardPage />} />
             <Route path={pageRoutes.income} element={<IncomePage />} />
             <Route path={pageRoutes.transactions} element={<TransactionsPage />} />
-            <Route path={pageRoutes.addTransaction} element={<AddTransactionPage />} />
             <Route path={pageRoutes.budgets} element={<BudgetsPage />} />
             <Route path={pageRoutes.report} element={<MonthlyReportPage />} />
             <Route path={pageRoutes.about} element={<AboutPage />} />
