@@ -1,4 +1,3 @@
-/* Finora's only stylesheet. Shared classes are documented in ../UI-CONTRACT.md. */
 :root {
   color-scheme: light;
   --color-navy: #05244b;
@@ -235,7 +234,6 @@ h3 {
   color: var(--color-positive);
 }
 
-/* Application shell */
 .app-skip-link {
   position: fixed;
   top: var(--space-2);
@@ -479,7 +477,6 @@ h3 {
   background: var(--color-scrim);
 }
 
-/* Shared page layout and honest feature placeholders */
 .page-stack {
   display: grid;
   gap: var(--grid-gap);
@@ -589,7 +586,6 @@ h3 {
   color: var(--color-muted);
 }
 
-/* Controls, forms, tables, badges, feedback, dialogs */
 .button {
   display: inline-flex;
   align-items: center;
@@ -905,7 +901,6 @@ dialog.modal {
   color: var(--color-income);
 }
 
-/* Feature foundations: owners compose these with shared primitives. */
 .dashboard-stats,
 .report-summary {
   display: grid;
@@ -1065,7 +1060,6 @@ dialog.modal {
   color: var(--color-exceeded-text);
 }
 
-/* Literal breakpoints; responsive values remain centralized in tokens. */
 @media (min-width: 1500px) {
   :root {
     --page-padding-inline: 54px;
@@ -1245,8 +1239,6 @@ dialog.modal {
   }
 }
 
-/* Integrated feature requirements; all values reuse the shared theme. */
-
 .budgets-table tbody th {
   background: var(--color-surface);
   color: var(--color-text);
@@ -1275,7 +1267,7 @@ dialog.modal {
   font-variant-numeric: tabular-nums;
   overflow-wrap: anywhere;
 }
-/* Gaps in the notification stack must not intercept page controls. */
+
 .toast-queue {
   pointer-events: none;
 }
@@ -1291,7 +1283,7 @@ dialog.modal {
 .field,
 .month-filter {
   min-width: 0;
-  }
+}
 
 .about-intro {
   display: flex;
@@ -1299,10 +1291,22 @@ dialog.modal {
   gap: var(--space-6);
   padding: var(--card-padding);
 }
-.about-intro p { margin-top: var(--space-3); }
-.about-brand { width: 64px; height: 64px; flex-shrink: 0; }
-.about-details { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.about-intro p {
+  margin-top: var(--space-3);
+}
+.about-brand {
+  width: 64px;
+  height: 64px;
+  flex-shrink: 0;
+}
+.about-details {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
 @media (max-width: 640px) {
-  .about-intro { flex-direction: column; }
-  .about-details { grid-template-columns: minmax(0, 1fr); }
+  .about-intro {
+    flex-direction: column;
+  }
+  .about-details {
+    grid-template-columns: minmax(0, 1fr);
+  }
 }

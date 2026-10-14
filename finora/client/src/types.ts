@@ -1,6 +1,5 @@
 import type { ReactNode } from "react";
 
-// Contract only. See ../../FRONTEND-CONTRACT.md for validation and lifecycle rules.
 export const incomeCategories = [
   "Salary",
   "Freelance",
@@ -21,10 +20,9 @@ export type Category = IncomeCategory | ExpenseCategory;
 export type TransactionType = "income" | "expense";
 export type TransactionId = number;
 export type BudgetId = number;
-/** Validated calendar strings, not timestamps. These aliases do not validate input. */
-export type DateOnly = string; // YYYY-MM-DD
-export type Month = string; // YYYY-MM
-export type Money = number; // USD major units; calculate using integer cents.
+export type DateOnly = string;
+export type Month = string;
+export type Money = number;
 
 export type TransactionInput = {
   amount: Money;
@@ -36,11 +34,11 @@ export type TransactionInput = {
 );
 export type Transaction = TransactionInput & {
   id: TransactionId;
-  createdAt?: string; // Server ISO timestamp; never substitutes for transaction date.
+  createdAt?: string;
 };
 export interface UpdateTransactionInput {
   id: TransactionId;
-  changes: TransactionInput; // Complete editable fields, not a partial patch.
+  changes: TransactionInput;
 }
 export interface BudgetKey {
   category: ExpenseCategory;
@@ -78,7 +76,6 @@ export interface ApiError {
   status?: number;
   fieldErrors?: Partial<Record<FieldName, string>>;
 }
-/** Legacy envelope type for external adapters; NestJS returns raw records. */
 export interface ApiSuccess<T> {
   data: T;
 }
@@ -88,7 +85,6 @@ export interface ApiFailure {
 export interface ApiRequestOptions {
   signal?: AbortSignal;
 }
-/** Helpers validate responses and reject with normalized ApiError. */
 export interface FrontendApi {
   getCategories(options?: ApiRequestOptions): Promise<CategoryLists>;
   getTransactions(options?: ApiRequestOptions): Promise<Transaction[]>;
@@ -134,7 +130,6 @@ export interface BudgetsState {
     | { operation: "delete"; id: BudgetId }
   >;
 }
-/** Shared data shape used by selectors and the React state provider. */
 export interface FinanceState {
   transactions: TransactionsState;
   budgets: BudgetsState;
@@ -142,7 +137,7 @@ export interface FinanceState {
 export interface TransactionFilters {
   type: TransactionType | "all";
   category: Category | "all";
-  month: Month | ""; // Empty means all history.
+  month: Month | "";
   query: string;
 }
 export interface MoneyTotals {
@@ -152,26 +147,25 @@ export interface MoneyTotals {
 }
 export interface MonthlySummary extends MoneyTotals {
   month: Month;
-  savingsRate: number | null; // Percentage; null when income is zero.
+  savingsRate: number | null;
   overspent: boolean;
   transactionCount: number;
 }
 export interface CategoryTotal<C extends Category = Category> {
   category: C;
   amount: Money;
-  percentage: number; // Zero when the relevant income/expense denominator is zero.
+  percentage: number;
 }
 export type BudgetStatus = "on-track" | "near-limit" | "exceeded" | "no-budget";
 export interface BudgetUsage extends BudgetKey {
   budgetId: BudgetId | null;
   budgetAmount: Money | null;
   spent: Money;
-  remaining: Money | null; // Signed: negative when exceeded.
-  exceeded: Money | null; // max(spent - budget, 0); null if no budget.
-  usagePercentage: number | null; // Not clamped; display actual usage above 100%.
+  remaining: Money | null;
+  exceeded: Money | null;
+  usagePercentage: number | null;
   status: BudgetStatus;
 }
-/** Named exports required from store/selectors.ts; no calculations implemented here. */
 export interface SharedSelectors {
   selectTransactions(state: FinanceState): readonly Transaction[];
   selectBudgets(state: FinanceState): readonly Budget[];
@@ -247,7 +241,7 @@ export interface MonthFilterProps {
   label: string;
   value: Month | "";
   onChange: (month: Month | "") => void;
-  allowAll?: boolean; // Default false: a valid month is required.
+  allowAll?: boolean;
   disabled?: boolean;
 }
 export interface BudgetStatusProps {
@@ -275,9 +269,9 @@ export interface BudgetFormProps {
   onCancel: () => void;
 }
 export interface TransactionFormProps {
-  transaction?: Transaction; // Omitted for create.
-  initialType?: TransactionType; // Default expense.
-  lockedType?: TransactionType; // Income screen passes income.
+  transaction?: Transaction;
+  initialType?: TransactionType;
+  lockedType?: TransactionType;
   pending: boolean;
   error: ApiError | null;
   onSubmit: (input: TransactionInput) => Promise<void>;
@@ -304,7 +298,7 @@ export interface TransactionFiltersProps {
   disabled?: boolean;
 }
 export interface DeleteTransactionModalProps {
-  transaction: Transaction | null; // Null closes the dialog.
+  transaction: Transaction | null;
   pending: boolean;
   error: ApiError | null;
   onConfirm: (id: TransactionId) => Promise<void>;
@@ -314,7 +308,7 @@ export interface DeleteTransactionModalProps {
 export const pageRoutes = {
   dashboard: "/",
   transactions: "/transactions",
-  
+
   income: "/income",
   budgets: "/budgets",
   report: "/reports/monthly",

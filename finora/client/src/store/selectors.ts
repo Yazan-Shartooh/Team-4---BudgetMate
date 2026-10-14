@@ -13,7 +13,6 @@ import type {
   TransactionFilters,
 } from "../types.ts";
 
-/** Evaluate at render/day rollover, not once when the module is loaded. */
 export function getCurrentMonth(now = new Date()): Month {
   return `${String(now.getFullYear()).padStart(4, "0")}-${String(now.getMonth() + 1).padStart(2, "0")}`;
 }

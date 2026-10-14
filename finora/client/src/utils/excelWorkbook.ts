@@ -9,14 +9,12 @@ import type {
   Transaction,
 } from "../types";
 
-/** Data for exporting the rows already filtered by an Income or Transactions view. */
 export interface RecordWorkbookData {
   kind: "records";
   fileName: string;
   rows: readonly Transaction[];
 }
 
-/** Data for exporting a report month and its corresponding transactions/budgets. */
 export interface ReportWorkbookData {
   kind: "report";
   fileName: string;
@@ -62,7 +60,6 @@ function transactionRows(rows: readonly Transaction[]) {
   ];
 }
 
-/** Build workbook data without changing or refiltering the supplied rows. */
 export function createExportWorkbook(data: ExcelWorkbookData): XLSX.WorkBook {
   const workbook = XLSX.utils.book_new();
 

@@ -1,5 +1,5 @@
-import { Link } from 'react-router-dom';
-import { pageRoutes } from '../types';
+import { Link } from "react-router-dom";
+import { pageRoutes } from "../types";
 
 export default function Footer() {
   return (

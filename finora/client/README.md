@@ -6,4 +6,4 @@ The app uses React + TypeScript, React Context/useReducer for shared records, pu
 
 Routes: `/`, `/income`, `/transactions`, (also accepts `?type=income`), `/budgets`, `/reports/monthly`, `/about`, plus a Not Found view.
 
-`npm test`, `npm run lint`, and `npm run build` run the client checks. `tests/live.browser.mjs` verifies the production UI against NestJS. The older `tests/features.browser.mjs` is a separate intercepted-response fixture suite for UI edge cases; it is not evidence of backend integration. To run it, start Vite on 5178 with `VITE_API_BASE_URL=/test-api`, then run the script with Playwright and Chrome available. Never use `/test-api` for the demo or a production build.
+`npm run lint` and `npm run build` run the client checks.

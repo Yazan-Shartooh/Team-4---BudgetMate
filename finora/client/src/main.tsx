@@ -10,7 +10,9 @@ createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <FinanceProvider>
       <BrowserRouter>
-        <NotificationProvider><App /></NotificationProvider>
+        <NotificationProvider>
+          <App />
+        </NotificationProvider>
       </BrowserRouter>
     </FinanceProvider>
   </StrictMode>,
